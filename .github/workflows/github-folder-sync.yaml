@@ -1,0 +1,44 @@
+name: Clone and Upload
+
+on:
+  push:
+    branches:
+      - master  # Adjust the branch as needed
+
+jobs:
+  clone-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Clone source repo
+      run: |
+        git clone https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/testing-artifactory.git source-repo
+
+
+    - name: Clone destination repo
+      run: |
+        git clone https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/enterprise-target.git destination_repo
+
+
+    - name: Check files from source to destination
+      run: |
+          ls source-repo
+          rm -rf destination_repo/*
+          cp -R source-repo/* destination_repo
+          cp -R source-repo/.github destination_repo  # Copy .github folder
+
+
+    - name: Commit and push changes
+      run: |
+          cd destination_repo
+          git config user.email "your_email@example.com"
+          git config user.name "MuhammadMesum514"
+          git add .
+          git commit -m "Update from source repo"
+          git push https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/enterprise-target.git master
+
+    - name: Delete the cloned repositories
+      run: |
+        rm -rf source-repo
+        rm -rf destination_repo
