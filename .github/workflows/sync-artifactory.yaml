@@ -21,8 +21,9 @@ jobs:
         
 
       - name: List packages
-        run: ls -al | cat ${{ secrets.ARTIFACTORY_API_KEY }}
+        run: ls -al 
         # run: cat ${{ secrets.ARTIFACTORY_API_KEY }}
+        
 
       # uploading zip file to artifactory
       - name: Deploy to Artifactory
