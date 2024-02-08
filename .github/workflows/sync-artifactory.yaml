@@ -1,92 +1,30 @@
-# name: Deploy to Artifactory
+name: Test Sync with Artifactory
 
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master  # Change this to your main branch
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  sync:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-
-
-#         # recursive copy of files from current working directory to artifactory
-#       - name: Deploy to Artifactory
-#         run: |
-#           curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T . "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/ --recursive"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
 
-#         # zipping content of my repo
-#       # - name: Zip content
-#       #   run: zip -r hello.zip .
-        
+    - name: Example call Jfrog cli
+      run: jf --version
 
-#       - name: List packages
-#         run: ls -al 
-#         # run: cat ${{ secrets.ARTIFACTORY_API_KEY }}
+    - name: Sync changes to Artifactory
+      run: |
+        # Replace the placeholders with your actual values
+        GITHUB_REPO_URL="https://github-us.utc.com/us-persons-only/CCOE-IaC-Templates.git"
+        ARTIFACTORY_REPO_URL="https://artifactory.utc.com/ui/repos/tree/General/ccoe-usp-ccoe-iac-templates-generic-test-l"
+        ARTIFACTORY_API_KEY="eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJhTkYtUFlVNUt2clRuUTRKRkdtekMwcUpwRnBGZDIwQXZmWGcwMFJZU21vIn0.eyJleHQiOiJ7XCJyZXZvY2FibGVcIjpcInRydWVcIn0iLCJzdWIiOiJqZmFjQDAxZjBmbTZxZDJ6MmttMXFxZnpiNXMxY3ZmXC91c2Vyc1wvYzk1MDM1NjcxQGFkeHVzZXIuY29tIiwic2NwIjoiYXBwbGllZC1wZXJtaXNzaW9uc1wvdXNlciIsImF1ZCI6IipAKiIsImlzcyI6ImpmZmVAMDAwIiwiZXhwIjoxNzMzNTA5NTQ4LCJpYXQiOjE3MDE5NzM1NDgsImp0aSI6IjBiYmJiOTg2LTc4OTQtNDEyOS1hNzU4LTAwYzA4ZjVhYjNkOCJ9.GHR9joX8FHsyiH_KEoRJZaJZBd_YWhR31UCkrIKVsA06ntl5VnT_eOtIiL0zKgmKu1zmHETe6bJflNiHBvQpHs_3rMUF78NoJIOZvNvQhby8bAkOLioVptdhd7gFAuVpboCnOTFpPH6kVTpQijZAPxzhEIcJF2iiMhHwr1BYwfF4VlRb8Jfu827Z34SVgJYIMmHB7Gg4bvdq53RmJQp--TLQfGGAxUBczY7dPxgpVfKZ3tHZ87DsDjXz2d0IjfllbJTG080J8oGqPaKjxDtET6NXFtfHIhr-kADwHEFg4pdAs7vPTRuP1bfb2kFUNoaUdzuHTcEld_YEF0W8oefoRQ"
 
-        
-
-#       # uploading zip file to artifactory
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip"
-
-     
-#       # upload folder from current working directory to artifactory
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T hello.zip -H "X-Artifactory-Explode: true" -X PUT "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-folder/?archiveType=zip&explode=1" -v
-
-
-#       # extracting zip file contents in artifactory
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip -X POST "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip?archiveType=zip&explode=1"
-
-
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.html "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.html"
-
-
-
-
-# name: Deploy to Artifactory
-
-# on:
-#   push:
-#     branches:
-#       - master
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       # Recursive upload of individual files
-#       - name: Upload files to Artifactory
-#         run: |
-#           find . -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
-
-#       # Upload entire repository directory recursively
-#       # - name: Upload repository directory to Artifactory
-#       #   run: |
-#       #     tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
-
-#       # Upload the 'work' folder recursively
-#       # - name: Upload 'work' folder to Artifactory
-#       #   run: |
-#       #     tar czf - work | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-repo/" --ftp-create-dirs
-
-#       # List packages (optional, for debugging)
-#       - name: List packages
-#         run: ls -al
+        # Sync changes to Artifactory
+        curl -H "Authorization: Bearer $ARTIFACTORY_API_KEY" -X PUT "https://artifactory.utc.com/ui/repos/tree/General/ccoe-usp-ccoe-iac-templates-generic-test-l" -T /opt/actions-runner/_work/CCOE-IaC-Templates/AWS/main.tf -H "X-Explode-Archive:true"
+      env:
+        ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
