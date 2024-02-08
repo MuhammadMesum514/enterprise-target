@@ -19,16 +19,14 @@ jobs:
           git config --global user.email "actions@github.com"
 
       - name: Push to target repo
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
         with:
           repository: MuhammadMesum514/enterprise-target
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           ref: 'master'
           path: 'enterprise-target' 
       - run: |
-          cd enterprise-target
           git checkout master
-          cp -r ../. .
           git add .
           git commit -m "Sync changes from source repo"
           git push origin master
