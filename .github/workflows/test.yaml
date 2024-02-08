@@ -80,6 +80,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           directory: poc-github-actions
-          branch: new-branch  # Specify the branch you want to push to
+          branch: master  # Specify the branch you want to push to
+          force: true
           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
           repository: MuhammadMesum514/enterprise-target
