@@ -16,16 +16,22 @@ jobs:
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/repos/MuhammadMesum514/testing-artifactory
 
-      - name: Display Repository Contents
-        run: |
-          ls -la
-          # cat hello.html  
-          
       - name: Checkout source repository
         uses: actions/checkout@v2
         with:
           repository: MuhammadMesum514/testing-artifactory
           token: ${{ secrets.REPO_ACCESS_TOKEN }}  # Use the new secret name
+          ref: master
+
+      - name: Display Repository Contents
+        run: |
+          ls -la
+          # cat hello.html
+
+      - name: Show Changes in Source Repository
+        run: |
+          git status
+          git diff
 
       - name: Checkout target repository
         uses: actions/checkout@v2
@@ -35,7 +41,7 @@ jobs:
 
       - name: Sync repositories
         run: |
-          git config --global user.name "Muhammad Mesum"
-          git config --global user.email "mesumraza09@gmail.com"
-          git remote add enterprise-repo git@github.com:MuhammadMesum514/enterprise-target.git
+          git remote add enterprise-repo https://github.com/MuhammadMesum514/enterprise-target.git
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git push enterprise-repo HEAD:master
