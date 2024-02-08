@@ -71,10 +71,15 @@ jobs:
       #     cd testing-artifactory
       #     # Add your commands to modify the content here
 
-      # - name: Push to MuhammadMesum514/enterprise-target repository
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     directory: testing-artifactory
-      #     branch: new-branch  # Specify the branch you want to push to
-      #     github_token: ${{ secrets.ACCESS_TOKEN }}
-      #     repository: MuhammadMesum514/enterprise-target
+      - name: Configure Git
+        run: |
+         git config --global user.email "you@example.com"
+         git config --global user.name "Your Name"
+
+      - name: Push to MuhammadMesum514/enterprise-target repository
+        uses: ad-m/github-push-action@master
+        with:
+          directory: poc-github-actions
+          branch: new-branch  # Specify the branch you want to push to
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: MuhammadMesum514/enterprise-target
