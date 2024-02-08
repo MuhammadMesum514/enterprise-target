@@ -19,5 +19,5 @@ date > "$OUTPUT_DIR"/.build_date.txt
 
 echo "generated_at: $(date)" > variables.yml
 
-mustache variables.yml index.output.html > "$OUTPUT_DIR"/index.html
-mustache variables.yml README.output.md > "$OUTPUT_DIR"/README.md
+# mustache variables.yml index.output.html > "$OUTPUT_DIR"/index.html
+# mustache variables.yml README.output.md > "$OUTPUT_DIR"/README.md
