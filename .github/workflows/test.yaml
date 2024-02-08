@@ -50,12 +50,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       
-      - name: Clone MuhammadMesum514/testing-artifactory PUBLIC repository
-        uses: whyakari/github-repo-action@v3.1
+      - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
+        uses: GuillaumeFalourd/clone-github-repo-action@main
         with:
           depth: 1
           branch: 'master'
           owner: 'MuhammadMesum514'
+          repository: 'testing-artifactory'
+          access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
           # repository: 'poc-github-actions'
       
       - name: Access cloned repository content
@@ -65,11 +67,6 @@ jobs:
           echo "CLONED REPO"
           cd testing-artifactory
           ls -la
-
-      # - name: Modify content (replace this with your actual modifications)
-      #   run: |
-      #     cd testing-artifactory
-      #     # Add your commands to modify the content here
 
       - name: Configure Git
         run: |
