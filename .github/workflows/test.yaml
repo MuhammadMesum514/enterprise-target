@@ -50,30 +50,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       
-      - name: Clone MuhammadMesum514/testing-artifactory repository
-        uses: actions/checkout@v2
+      - name: Clone GuillaumeFalourd/poc-github-actions PUBLIC repository
+        uses: whyakari/github-repo-action@v3.1
         with:
-          repository: MuhammadMesum514/testing-artifactory
-          ref: master
-          branch: master
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          depth: 1
+          branch: 'main'
+          owner: 'GuillaumeFalourd'
+          repository: 'poc-github-actions'
       
       - name: Access cloned repository content
         run: |
           echo "ROOT"
           ls -la
           echo "CLONED REPO"
-          ls -la testing-artifactory
+          cd poc-github-actions
+          ls -la
 
       # - name: Modify content (replace this with your actual modifications)
       #   run: |
       #     cd testing-artifactory
       #     # Add your commands to modify the content here
 
-      # - name: Push to MuhammadMesum514/enterprise-target repository
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     directory: testing-artifactory
-      #     branch: new-branch  # Specify the branch you want to push to
-      #     github_token: ${{ secrets.ACCESS_TOKEN }}
-      #     repository: MuhammadMesum514/enterprise-target
+      - name: Configure Git
+        run: |
+         git config --global user.email "you@example.com"
+         git config --global user.name "Your Name"
+
+      - name: Push to MuhammadMesum514/enterprise-target repository
+        uses: ad-m/github-push-action@master
+        with:
+          directory: testing-artifactory
+          branch: new-branch  # Specify the branch you want to push to
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          repository: MuhammadMesum514/enterprise-target
