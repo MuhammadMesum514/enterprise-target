@@ -57,36 +57,36 @@
 
 
 
-name: Deploy to Artifactory
+# name: Deploy to Artifactory
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      # Recursive upload of individual files
-      - name: Upload files to Artifactory
-        run: |
-          find ./work -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
+#       # Recursive upload of individual files
+#       - name: Upload files to Artifactory
+#         run: |
+#           find . -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
 
-      # Upload entire repository directory recursively
-      # - name: Upload repository directory to Artifactory
-      #   run: |
-      #     tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
+#       # Upload entire repository directory recursively
+#       # - name: Upload repository directory to Artifactory
+#       #   run: |
+#       #     tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
 
-      # Upload the 'work' folder recursively
-      # - name: Upload 'work' folder to Artifactory
-      #   run: |
-      #     tar czf - work | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-repo/" --ftp-create-dirs
+#       # Upload the 'work' folder recursively
+#       # - name: Upload 'work' folder to Artifactory
+#       #   run: |
+#       #     tar czf - work | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-repo/" --ftp-create-dirs
 
-      # List packages (optional, for debugging)
-      - name: List packages
-        run: ls -al
+#       # List packages (optional, for debugging)
+#       - name: List packages
+#         run: ls -al
