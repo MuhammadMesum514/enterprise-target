@@ -84,6 +84,7 @@ jobs:
       - run: git push origin repo-sync
       - uses: repo-sync/github-sync@v2
         name: Sync repo to branch
+        
         with:
           source_repo: https://github.com/MuhammadMesum514/testing-artifactory.git
           source_branch: main
