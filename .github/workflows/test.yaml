@@ -71,10 +71,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: creates output
         run:  mkdir output; date > output/date.txt
-      - name: Pushes to another repository
-        uses: cpina/github-action-push-to-another-repository@debug-78
-        env:
-          SSH_DEPLOY_KEY: ${{ secrets.REPO_ACCESS_TOKEN }}
+      # - name: Pushes to another repository
+        # uses: cpina/github-action-push-to-another-repository@master
+        # env:
+          # API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Pushes to another repository
         id: push_directory
@@ -82,7 +82,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
-          source-directory: testing-artifactory
+          source-directory: output
           destination-github-username: 'MuhammadMesum514'
           destination-repository-name: 'enterprise-target'
           user-email: mesumraza09@gmail.com
