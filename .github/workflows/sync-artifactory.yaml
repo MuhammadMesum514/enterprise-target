@@ -1,92 +1,30 @@
-# name: Deploy to Artifactory
+name: Test Sync with Artifactory
 
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master  # Change this to your main branch
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+jobs:
+  sync:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
+    - name: Set up JFrog CLI
+      run: |
+        curl -fL https://getcli.jfrog.io | sh
+        chmod +x jfrog
+        sudo mv jfrog /usr/local/bin/
+        jfrog --version
 
+    - name: Zip the repo
+      run: zip -r art_repo.zip .
 
-#         # recursive copy of files from current working directory to artifactory
-#       - name: Deploy to Artifactory
-#         run: |
-#           curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T . "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/ --recursive"
-
-
-#         # zipping content of my repo
-#       # - name: Zip content
-#       #   run: zip -r hello.zip .
-        
-
-#       - name: List packages
-#         run: ls -al 
-#         # run: cat ${{ secrets.ARTIFACTORY_API_KEY }}
-
-        
-
-#       # uploading zip file to artifactory
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip"
-
-     
-#       # upload folder from current working directory to artifactory
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T hello.zip -H "X-Artifactory-Explode: true" -X PUT "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-folder/?archiveType=zip&explode=1" -v
-
-
-#       # extracting zip file contents in artifactory
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip -X POST "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip?archiveType=zip&explode=1"
-
-
-#       # - name: Deploy to Artifactory
-#       #   run: |
-#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.html "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.html"
-
-
-
-
-# name: Deploy to Artifactory
-
-# on:
-#   push:
-#     branches:
-#       - master
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       # Recursive upload of individual files
-#       - name: Upload files to Artifactory
-#         run: |
-#           find . -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
-
-#       # Upload entire repository directory recursively
-#       # - name: Upload repository directory to Artifactory
-#       #   run: |
-#       #     tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
-
-#       # Upload the 'work' folder recursively
-#       # - name: Upload 'work' folder to Artifactory
-#       #   run: |
-#       #     tar czf - work | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-repo/" --ftp-create-dirs
-
-#       # List packages (optional, for debugging)
-#       - name: List packages
-#         run: ls -al
+    - name: Upload to Artifactory
+      run: |
+        jfrog rt u art_repo.zip "/test/" --url="https://artifactory.utc.com/ui/repos/tree/General/ccoe-usp-ccoe-iac-templates-generic-test-l" --apikey="${{ secrets.ARTIFACTORY_API_KEY }}"
+      env:
+        ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
