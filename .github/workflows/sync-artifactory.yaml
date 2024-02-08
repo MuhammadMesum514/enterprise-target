@@ -14,17 +14,22 @@ jobs:
       uses: actions/checkout@v3
 
 
-    - name: Example call Jfrog cli
-      run: jf --version
+    - name: Set up JFrog CLI
+       run: |
+        curl -fL https://getcli.jfrog.io | sh
+        chmod +x jfrog
+        sudo mv jfrog /usr/local/bin/
+        jfrog --version
 
-    - name: Sync changes to Artifactory
-      run: |
-        # Replace the placeholders with your actual values
-        GITHUB_REPO_URL="https://github-us.utc.com/us-persons-only/CCOE-IaC-Templates.git"
-        ARTIFACTORY_REPO_URL="https://artifactory.utc.com/ui/repos/tree/General/ccoe-usp-ccoe-iac-templates-generic-test-l"
-        ARTIFACTORY_API_KEY="eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJhTkYtUFlVNUt2clRuUTRKRkdtekMwcUpwRnBGZDIwQXZmWGcwMFJZU21vIn0.eyJleHQiOiJ7XCJyZXZvY2FibGVcIjpcInRydWVcIn0iLCJzdWIiOiJqZmFjQDAxZjBmbTZxZDJ6MmttMXFxZnpiNXMxY3ZmXC91c2Vyc1wvYzk1MDM1NjcxQGFkeHVzZXIuY29tIiwic2NwIjoiYXBwbGllZC1wZXJtaXNzaW9uc1wvdXNlciIsImF1ZCI6IipAKiIsImlzcyI6ImpmZmVAMDAwIiwiZXhwIjoxNzMzNTA5NTQ4LCJpYXQiOjE3MDE5NzM1NDgsImp0aSI6IjBiYmJiOTg2LTc4OTQtNDEyOS1hNzU4LTAwYzA4ZjVhYjNkOCJ9.GHR9joX8FHsyiH_KEoRJZaJZBd_YWhR31UCkrIKVsA06ntl5VnT_eOtIiL0zKgmKu1zmHETe6bJflNiHBvQpHs_3rMUF78NoJIOZvNvQhby8bAkOLioVptdhd7gFAuVpboCnOTFpPH6kVTpQijZAPxzhEIcJF2iiMhHwr1BYwfF4VlRb8Jfu827Z34SVgJYIMmHB7Gg4bvdq53RmJQp--TLQfGGAxUBczY7dPxgpVfKZ3tHZ87DsDjXz2d0IjfllbJTG080J8oGqPaKjxDtET6NXFtfHIhr-kADwHEFg4pdAs7vPTRuP1bfb2kFUNoaUdzuHTcEld_YEF0W8oefoRQ"
+    - name: Zip the repo
+        run: zip -r art_repo.zip .
 
-        # Sync changes to Artifactory
-        curl -H "Authorization: Bearer $ARTIFACTORY_API_KEY" -X PUT "https://artifactory.utc.com/ui/repos/tree/General/ccoe-usp-ccoe-iac-templates-generic-test-l" -T /opt/actions-runner/_work/CCOE-IaC-Templates/AWS/main.tf -H "X-Explode-Archive:true"
-      env:
+    - name: Upload to Artifactory
+        run: |
+          jfrog rt u art_repo.zip "/test-artifactory" --url="https://artifactory.utc.com/ui/repos/tree/General/ccoe-usp-ccoe-iac-templates-generic-test-l" --apiKey="${{ secrets.ARTIFACTORY_API_KEY }}"
+
+
+         env:
         ARTIFACTORY_API_KEY: ${{ secrets.ARTIFACTORY_API_KEY }}
+
+      
