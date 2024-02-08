@@ -14,10 +14,10 @@ jobs:
     container: pandoc/latex
     steps:
       - uses: actions/checkout@v2
-      - name: Install mustache (to update the date in build.sh)
-        run:  apk add ruby && gem install mustache
-      - name: creates the wanted files in output_temp/ - example script
-        run:  sh ./build.sh
+      # - name: Install mustache (to update the date in build.sh)
+      #   run:  apk add ruby && gem install mustache
+      # - name: creates the wanted files in output_temp/ - example script
+      #   run:  sh ./build.sh
       # - name: filters output_temp/ to output/ using rsync (to exclude master.epub in this example)
         # run:  apk add rsync && rsync -arv --exclude="/master.epub" output_temp/ output/
       - name: Pushes to another repository
