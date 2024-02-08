@@ -28,6 +28,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "mesumraza09@gmail.com"
           git checkout -b repo-sync
+          ls -la
           git add .
           git commit -m "Sync changes from source repo"
           git push origin repo-sync
