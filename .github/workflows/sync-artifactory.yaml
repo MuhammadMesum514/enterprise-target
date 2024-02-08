@@ -13,18 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Example call Jfrog cli
-        run: jf --version
-            ls
+      - name: List packages
+        run: ls -al
 
-      # - name: Set up Java
-      #   uses: actions/setup-java@v2
-      #   with:
-      #     java-version: '11'
-
-      - name: Build and Publish to Artifactory
+      - name: Deploy to Artifactory
         run: |
-          curl -u USERNAME:API_KEY_OR_TOKEN -T hello.html "http://ec2-54-166-235-168.compute-1.amazonaws.com:8081/artifactory/test-upload/index.html"
-        env:
-          USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          API_KEY_OR_TOKEN: ${{ secrets.ARTIFACTORY_API_KEY }}
+          curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.html "http://ec2-54-166-235-168.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.html"
