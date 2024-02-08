@@ -50,23 +50,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       
-      - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
-        uses: GuillaumeFalourd/clone-github-repo-action@main
-        with:
-          depth: 1
-          branch: 'master'
-          owner: 'MuhammadMesum514'
-          repository: 'testing-artifactory'
-          access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          # repository: 'poc-github-actions'
+      # - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
+      #   uses: GuillaumeFalourd/clone-github-repo-action@main
+      #   with:
+      #     depth: 1
+      #     branch: 'master'
+      #     owner: 'MuhammadMesum514'
+      #     repository: 'testing-artifactory'
+      #     access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #     # repository: 'poc-github-actions'
       
-      - name: Access cloned repository content
-        run: |
-          echo "ROOT"
-          ls -la
-          echo "CLONED REPO"
-          cd testing-artifactory
-          ls -la
+      # - name: Access cloned repository content
+      #   run: |
+      #     echo "ROOT"
+      #     ls -la
+      #     echo "CLONED REPO"
+      #     cd testing-artifactory
+      #     ls -la
+
+      - uses: actions/checkout@v2
+      - name: creates output
+        run:  mkdir output; date > output/date.txt
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@debug-78
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Pushes to another repository
         id: push_directory
