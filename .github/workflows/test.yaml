@@ -15,17 +15,15 @@ jobs:
 
       - name: Set up Git
         run: |
-          echo ${{ secrets.REPO_ACCESS_TOKEN }}  
-
+          echo ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Push to target repo
-        uses: actions/checkout@v3
-        with:
-          repository: MuhammadMesum514/enterprise-target.git
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          ref: 'master'
-      - run: |
-          git checkout master
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "mesumraza09@gmail.com"
+          git remote add target_repo https://github.com/MuhammadMesum514/enterprise-target.git
+          git checkout -b repo-sync
+          ls -la
           git add .
           git commit -m "Sync changes from source repo"
-          git push origin master
+          git push target_repo repo-sync:main # Assuming you want to push to the 'main' branch in the target repository
