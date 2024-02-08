@@ -1,0 +1,55 @@
+# name: Clone and Upload
+
+# on:
+#   push:
+#     branches:
+#       - master  # Adjust the branch as needed
+
+# jobs:
+#   clone-and-upload:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     # - name: Checkout source repo
+#     #   uses: actions/checkout@v2
+#     # test
+
+
+#     - name: Clone source repo
+#       run: |
+#         git clone https://pietto-vasco_teradata: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@github.com/Teradata-PE-Stage/acoresrvs-stackset_svc.git source-repo
+
+
+#     - name: Clone destination repo
+#       run: |
+#         git clone https://pietto-vasco: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@github.qateradatacloud.com/QA/stacktest.git destination_repo
+
+
+#     - name: Check files from source to destination
+#       run: |
+#           ls source-repo
+#           rm -rf destination_repo/*
+#           cp -R source-repo/* destination_repo
+#           cp -R source-repo/.github destination_repo
+      
+#     - name: Get source commit message
+#       id: get_commit_message
+#       run: |
+#           cd source-repo
+#           export ORIGIN_COMMIT="$(git log --format=%B -n 1 $GITHUB_SHA)"
+#           echo "::set-output name=commit_message::$ORIGIN_COMMIT"
+
+#     - name: Commit and push changes
+#       run: |
+#           cd destination_repo
+#           git config user.email "actions@github.com"
+#           git config user.name "GitHub Actions"
+#           git add .
+#           git commit -m "Update from source repo"
+#           git push https://pietto-vasco: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@github.qateradatacloud.com/QA/stacktest.git main
+
+#     - name: Delete the cloned repositories
+#       run: |
+#         rm -rf source-repo
+#         rm -rf destination_repo
+      
