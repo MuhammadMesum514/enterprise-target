@@ -38,10 +38,15 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           persist-credentials: false  # No need to persist credentials for the target repository
 
-      # copy common files to the target repo
-      - name: Copy common files
+      # - name: Copy common files
+      #   run: |
+      #     cp -r * dest/
+      #     ls -la dest/
+
+      - name: Copy files from source to target
         run: |
-          cp -r * dest/
+          mkdir -p dest  # Create dest directory if it doesn't exist
+          cp -r !(dest) dest/
           ls -la dest/
 
       - name: Sync repositories
