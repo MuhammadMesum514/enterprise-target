@@ -84,17 +84,20 @@ jobs:
       - name: Access cloned repository content
         run: |
           echo "ROOT"
-          ls -la
-          echo "CLONED REPO"
-          cd testing-artifactory
+          ls -la testing-artifactory
+          pwd
+          mv testing-artifactory/* output/
+          # echo "CLONED REPO"
+          # cp -r * output/
+          # cd testing-artifactory
           ls -la
         # copy repository content to output directory
-      - name: Copy files from source to target
-        run: |
-          mkdir -p output  # Create dest directory if it doesn't exist
-          ls -la 
-          cp -r * output/
-          ls -la output/
+      # - name: Copy files from source to target
+      #   run: |
+      #     mkdir -p output  # Create dest directory if it doesn't exist
+      #     ls -la 
+      #     cp -r * output/
+      #     ls -la output/
 
       
 
