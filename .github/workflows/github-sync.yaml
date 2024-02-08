@@ -21,9 +21,8 @@ jobs:
         with:
           repository: MuhammadMesum514/testing-artifactory
           token: ${{ secrets.REPO_ACCESS_TOKEN }}  # Use the new secret name
-          path: "src"
           ref: master
-          persist-credentials: falso
+          persist-credentials: true
 
       - name: Display Repository Contents
         run: |
@@ -48,14 +47,14 @@ jobs:
       - name: Copy common files
         shell: bash
         run: |
-          cp -r src/* dest/
+          cp -r ./* dest/
           ls -la dest/
 
       # copy files from source repo to target repo
       - name: Copy files from source to target
         shell: bash
         run: |
-          cp -r src/* dest/
+          cp -r ./* dest/
           ls -la dest/
 
       - name: Sync repositories
