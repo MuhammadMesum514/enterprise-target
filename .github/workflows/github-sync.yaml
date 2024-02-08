@@ -35,7 +35,5 @@ jobs:
 
       - name: Sync repositories
         run: |
-          git config --global user.name "Muhammad Mesum"
-          git config --global user.email "mesumraza09@gmail.com"
           git remote add enterprise-repo git@github.com:MuhammadMesum514/enterprise-target.git
           git push enterprise-repo HEAD:master
