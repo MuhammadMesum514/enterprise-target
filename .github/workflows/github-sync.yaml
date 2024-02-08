@@ -20,20 +20,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: MuhammadMesum514/testing-artifactory
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}  # Use the new secret name
-          path: "src"
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
           ref: master
-          persist-credentials: falso
+          persist-credentials: false  # No need to persist credentials for the source repository
 
       - name: Display Repository Contents
         run: |
           ls -la
           # cat hello.html
-
-      - name: Show Changes in Source Repository
-        run: |
-          git status
-          git diff
 
       - name: Checkout target repository
         uses: actions/checkout@v2
@@ -41,26 +35,20 @@ jobs:
           path: "dest"
           repository: MuhammadMesum514/enterprise-target
           ref: master
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}  # Use the new secret name
-          persist-credentials: true
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          persist-credentials: false  # No need to persist credentials for the target repository
 
-      # copy common files to new repo
+      # copy common files to the target repo
       - name: Copy common files
-        shell: bash
         run: |
-          cp -r src/* dest/
-          ls -la dest/
-
-      # copy files from source repo to target repo
-      - name: Copy files from source to target
-        shell: bash
-        run: |
-          cp -r src/* dest/
+          cp -r * dest/
           ls -la dest/
 
       - name: Sync repositories
         run: |
+          cd dest
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git remote add enterprise-repo https://github.com/MuhammadMesum514/enterprise-target.git
-          git push enterprise-repo HEAD:master
+          git add .
+          git commit -m "Sync changes from source repository"
+          git push origin master
