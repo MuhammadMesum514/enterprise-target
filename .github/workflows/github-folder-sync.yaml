@@ -1,3 +1,57 @@
+# name: Clone and Upload
+
+# on:
+#   push:
+#     branches:
+#       - master  # Adjust the branch as needed
+
+# jobs:
+#   clone-and-upload:
+#     runs-on: ubuntu-latest
+
+#     steps:
+
+#     - name: Clone source repo
+#       run: |
+#         git clone https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/testing-artifactory.git source-repo
+
+
+#     - name: Clone destination repo
+#       run: |
+#         git clone https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/enterprise-target.git destination_repo
+
+
+#     - name: Check files from source to destination
+#       run: |
+#           ls source-repo
+#           rm -rf destination_repo/*
+#           cp -R source-repo/* destination_repo
+#           cp -R source-repo/.github destination_repo  
+
+
+#     - name: Get source commit message
+#       id: get_commit_message
+#       run: |
+#           cd source-repo
+#           export ORIGIN_COMMIT="$(git log --format=%B -n 1 $GITHUB_SHA)"
+#           echo "::set-output name=commit_message::$ORIGIN_COMMIT"
+
+#     - name: Commit and push changes
+#       run: |
+#           cd destination_repo
+#           git config user.email "your_email@example.com"
+#           git config user.name "MuhammadMesum514"
+#           git add .
+#           git commit -m "See ORIGIN_COMMIT from $GITHUB_REF: ${{ steps.get_commit_message.outputs.commit_message }}"
+#           git push https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/enterprise-target.git master
+
+#     - name: Delete the cloned repositories
+#       run: |
+#         rm -rf source-repo
+#         rm -rf destination_repo
+
+
+
 name: Clone and Upload
 
 on:
@@ -21,32 +75,45 @@ jobs:
         git clone https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/enterprise-target.git destination_repo
 
 
-    - name: Check files from source to destination
+    - name: Copy files from source to destination
       run: |
-          ls source-repo
           rm -rf destination_repo/*
           cp -R source-repo/* destination_repo
           cp -R source-repo/.github destination_repo  
 
 
-    - name: Get source commit message
-      id: get_commit_message
-      run: |
-          cd source-repo
-          export ORIGIN_COMMIT="$(git log --format=%B -n 1 $GITHUB_SHA)"
-          echo "::set-output name=commit_message::$ORIGIN_COMMIT"
-
-    - name: Commit and push changes
+    - name: Set up commit author information
       run: |
           cd destination_repo
           git config user.email "your_email@example.com"
           git config user.name "MuhammadMesum514"
+
+    - name: Add all files and commit changes
+      run: |
+          cd destination_repo
           git add .
-          git commit -m "See ORIGIN_COMMIT from $GITHUB_REF: ${{ steps.get_commit_message.outputs.commit_message }}"
-          git push https://MuhammadMesum514:${{ secrets.REPO_ACCESS_TOKEN }}@github.com/MuhammadMesum514/enterprise-target.git master
+          git commit -m "Initial commit from source repository"
+
+    - name: Push changes to master branch
+      run: |
+          cd destination_repo
+          git push origin master
+
+    - name: Copy all commit history from source to destination
+      run: |
+          cd destination_repo
+          git fetch --all
+          git reset --hard origin/master
+          cd ../source-repo
+          git log --reverse --format=%H | while read commit_hash; do
+              git checkout $commit_hash -- .
+              git commit -a -m "$(git log --format='%s' -n 1 $commit_hash)"
+              git push origin master
+          done
 
     - name: Delete the cloned repositories
       run: |
         rm -rf source-repo
         rm -rf destination_repo
+
 
