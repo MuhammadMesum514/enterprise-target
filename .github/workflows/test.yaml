@@ -36,7 +36,7 @@
 #         run: echo $DESTINATION_CLONED_DIRECTORY
 
 
-name: Clone and Push Workflow
+# name: Clone and Push Workflow
 
 on:
   push:
@@ -50,39 +50,59 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       
-      - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
-        uses: GuillaumeFalourd/clone-github-repo-action@main
-        with:
-          depth: 1
-          branch: 'master'
-          owner: 'MuhammadMesum514'
-          repository: 'testing-artifactory'
-          access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          # repository: 'poc-github-actions'
+      # - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
+      #   uses: GuillaumeFalourd/clone-github-repo-action@main
+      #   with:
+      #     depth: 1
+      #     branch: 'master'
+      #     owner: 'MuhammadMesum514'
+      #     repository: 'testing-artifactory'
+      #     access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #     # repository: 'poc-github-actions'
       
-      - name: Access cloned repository content
-        run: |
-          echo "ROOT"
-          ls -la
-          echo "CLONED REPO"
-          cd testing-artifactory
-          ls -la
-
-      # - name: Modify content (replace this with your actual modifications)
+      # - name: Access cloned repository content
       #   run: |
+      #     echo "ROOT"
+      #     ls -la
+      #     echo "CLONED REPO"
       #     cd testing-artifactory
-      #     # Add your commands to modify the content here
+      #     ls -la
 
-      - name: Configure Git
-        run: |
-         git config --global user.email "you@example.com"
-         git config --global user.name "Your Name"
+      - uses: actions/checkout@v2
+      - name: creates output
+        run:  mkdir output; date > output/date.txt
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@debug-78
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.REPO_ACCESS_TOKEN }}
 
-      - name: Push to MuhammadMesum514/test-enterprise repository
-        uses: ad-m/github-push-action@master
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@master
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
-          directory: testing-artifactory
-          branch: master  # Specify the branch you want to push to
-          force: true
-          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: MuhammadMesum514/test-enterprise
+          source-directory: testing-artifactory
+          destination-github-username: 'MuhammadMesum514'
+          destination-repository-name: 'enterprise-target'
+          user-email: mesumraza09@gmail.com
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: master
+      - name: Test get variable exported by push-to-another-repository
+        run: echo $DESTINATION_CLONED_DIRECTORY
+
+      # - name: Configure Git
+      #   run: |
+      #    git config --global user.email "you@example.com"
+      #    git config --global user.name "Your Name"
+
+      # - name: Push to MuhammadMesum514/test-enterprise repository
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     directory: testing-artifactory
+      #     branch: master  # Specify the branch you want to push to
+      #     force: true
+      #     github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #     repository: MuhammadMesum514/test-enterprise
+
+
