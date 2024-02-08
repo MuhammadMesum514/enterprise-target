@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Show Permissions of Repository
+        run: |
+           curl -H "Authorization: Bearer ${{ secrets.REPO_ACCESS_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/MuhammadMesum514/testing-artifactory
+
+      - name: Display Repository Contents
+        run: |
+          ls -la
+          # cat hello.html  
+          
       - name: Checkout source repository
         uses: actions/checkout@v2
         with:
