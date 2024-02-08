@@ -85,8 +85,8 @@ jobs:
     - name: Set up commit author information
       run: |
           cd destination_repo
-          git config user.email "your_email@example.com"
-          git config user.name "MuhammadMesum514"
+          git config --global  user.email "your_email@example.com"
+          git config  --global user.name "MuhammadMesum514"
 
     - name: Add all files and commit changes
       run: |
@@ -102,8 +102,6 @@ jobs:
     - name: Copy all commit history from source to destination
       run: |
           cd destination_repo
-          git config user.email "your_email@example.com"
-          git config user.name "MuhammadMesum514"
           git fetch --all
           git reset --hard origin/master
           cd ../source-repo
