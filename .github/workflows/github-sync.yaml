@@ -60,43 +60,40 @@
 
 
 
-name: Repo Sync
+# name: Repo Sync
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  repo-sync:
-    name: Repo Sync
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Git
-        # run: |
-        #   git config --global user.email "actions@github.com"
-        #   git config --global user.name "GitHub Actions"
-        run: git checkout -b repo-sync
-        - run: git remote -v
-        - run: git branch -a
+# jobs:
+#   repo-sync:
+#     name: Repo Sync
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Git
+#         run: git push origin master:repo-sync
+#       - run: |
+#           git checkout -b repo-sync
+#           git remote -v
+#           git branch -a
+#       - run: git push origin 
+#       - uses: repo-sync/github-sync@v2
+#         name: Sync repo to branch
+#         with:
+#           source_repo: https://github.com/MuhammadMesum514/testing-artifactory.git
+#           source_branch: master
+#           destination_branch: repo-sync
+#           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
-      - run: git push origin repo-sync
-      - uses: repo-sync/github-sync@v2
-        name: Sync repo to branch
-        
-        with:
-          source_repo: https://github.com/MuhammadMesum514/testing-artifactory.git
-          source_branch: main
-
-          destination_branch: repo-sync
-          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-      - uses: repo-sync/pull-request@v2
-        name: Create pull request
-        with:
-          source_branch: repo-sync
-          destination_branch: main
-          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#       - uses: repo-sync/pull-request@v2
+#         name: Create pull request
+#         with:
+#           source_branch: repo-sync
+#           destination_branch: main
+#           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
 
 
