@@ -73,14 +73,14 @@ jobs:
         uses: actions/checkout@v2
 
       # Recursive upload of individual files
-      # - name: Upload files to Artifactory
-        # run: |
-          # find . -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
+      - name: Upload files to Artifactory
+        run: |
+          find ./work -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
 
       # Upload entire repository directory recursively
-      - name: Upload repository directory to Artifactory
-        run: |
-          tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
+      # - name: Upload repository directory to Artifactory
+      #   run: |
+      #     tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
 
       # Upload the 'work' folder recursively
       # - name: Upload 'work' folder to Artifactory
