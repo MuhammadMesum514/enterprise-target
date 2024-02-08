@@ -19,7 +19,8 @@ jobs:
       - name: Display Repository Contents
         run: |
           ls -la
-          cat README.md  # or any other file in your repository
+          # cat hello.html  
+          
       - name: Checkout source repository
         uses: actions/checkout@v2
         with:
