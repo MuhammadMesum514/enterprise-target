@@ -29,10 +29,6 @@ jobs:
           ls -la
           # cat hello.html
 
-      - name: Show Changes in Source Repository
-        run: |
-          git status
-          git diff
 
       - name: Checkout target repository
         uses: actions/checkout@v2
