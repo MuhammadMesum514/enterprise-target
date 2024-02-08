@@ -1,3 +1,62 @@
+# name: Deploy to Artifactory
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+
+
+#         # recursive copy of files from current working directory to artifactory
+#       - name: Deploy to Artifactory
+#         run: |
+#           curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T . "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/ --recursive"
+
+
+#         # zipping content of my repo
+#       # - name: Zip content
+#       #   run: zip -r hello.zip .
+        
+
+#       - name: List packages
+#         run: ls -al 
+#         # run: cat ${{ secrets.ARTIFACTORY_API_KEY }}
+
+        
+
+#       # uploading zip file to artifactory
+#       # - name: Deploy to Artifactory
+#       #   run: |
+#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip"
+
+     
+#       # upload folder from current working directory to artifactory
+#       # - name: Deploy to Artifactory
+#       #   run: |
+#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T hello.zip -H "X-Artifactory-Explode: true" -X PUT "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-folder/?archiveType=zip&explode=1" -v
+
+
+#       # extracting zip file contents in artifactory
+#       # - name: Deploy to Artifactory
+#       #   run: |
+#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip -X POST "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip?archiveType=zip&explode=1"
+
+
+#       # - name: Deploy to Artifactory
+#       #   run: |
+#       #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.html "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.html"
+
+
+
+
 name: Deploy to Artifactory
 
 on:
@@ -13,28 +72,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-     
-
-      # zipping content of my repo
-      - name: Zip content
-        run: zip -r hello.zip .
-        
-
-      - name: List packages
-        run: ls -al | cat ${{ secrets.ARTIFACTORY_API_KEY }}
-        # run: cat ${{ secrets.ARTIFACTORY_API_KEY }}
-
-      # uploading zip file to artifactory
-      - name: Deploy to Artifactory
+      # Recursive upload of individual files
+      - name: Upload files to Artifactory
         run: |
-          curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip"
+          find . -type f -exec curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T {} "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/{}" \;
 
-      # extracting zip file contents in artifactory
-      # - name: Deploy to Artifactory
+      # Upload entire repository directory recursively
+      # - name: Upload repository directory to Artifactory
       #   run: |
-      #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip -X POST "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip?archiveType=zip&explode=1"
+      #     tar czf - . | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/all-repo-folder/" --ftp-create-dirs
 
-
-      # - name: Deploy to Artifactory
+      # Upload the 'work' folder recursively
+      # - name: Upload 'work' folder to Artifactory
       #   run: |
-      #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.html "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.html"
+      #     tar czf - work | curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_PASSWORD }} -T - "http://ec2-54-165-221-215.compute-1.amazonaws.com:8081/artifactory/test-upload/my-repo/" --ftp-create-dirs
+
+      # List packages (optional, for debugging)
+      - name: List packages
+        run: ls -al
