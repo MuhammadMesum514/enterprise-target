@@ -1,32 +1,120 @@
-# # This is a basic workflow to help you get started with Actions
+# # # This is a basic workflow to help you get started with Actions
 
-# name: CI
+# # name: CI
+
+# # on:
+# #   push:
+# #     branches: [ master, filter-files ]
+# #   pull_request:
+# #     branches: [ master, filter-files ]
+
+# # jobs:
+# #   build:
+# #     runs-on: ubuntu-latest
+# #     container: pandoc/latex
+# #     steps:
+# #       - uses: actions/checkout@v2
+# #       - name: Install mustache (to update the date in build.sh)
+# #         run:  apk add ruby && gem install mustache
+# #       - name: creates the wanted files in output_temp/ - example script
+# #         run:  sh ./build.sh
+# #       - name: filters output_temp/ to output/ using rsync (to exclude master.epub in this example)
+# #         run:  apk add rsync && rsync -arv --exclude="/master.epub" output_temp/ output/
+# #       - name: Pushes to another repository
+# #         id: push_directory
+# #         uses: cpina/github-action-push-to-another-repository@master
+# #         env:
+# #           API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
+# #         with:
+# #           source-directory: output/
+# #           destination-github-username: 'MuhammadMesum514'
+# #           destination-repository-name: 'enterprise-target'
+# #           user-email: mesumraza09@gmail.com
+# #           commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+# #           target-branch: master
+# #       - name: Test get variable exported by push-to-another-repository
+# #         run: echo $DESTINATION_CLONED_DIRECTORY
+
+
+# # name: Clone and Push Workflow
 
 # on:
 #   push:
-#     branches: [ master, filter-files ]
-#   pull_request:
-#     branches: [ master, filter-files ]
+#     branches:
+#       - master
+#   workflow_dispatch:
 
 # jobs:
-#   build:
+    
+#   job-public-repo-ubuntu:
 #     runs-on: ubuntu-latest
-#     container: pandoc/latex
 #     steps:
+      
+#       # - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
+#       #   uses: GuillaumeFalourd/clone-github-repo-action@main
+#       #   with:
+#       #     depth: 1
+#       #     branch: 'master'
+#       #     owner: 'MuhammadMesum514'
+#       #     repository: 'testing-artifactory'
+#       #     access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#       #     # repository: 'poc-github-actions'
+      
+#       # - name: Access cloned repository content
+#       #   run: |
+#       #     echo "ROOT"
+#       #     ls -la
+#       #     echo "CLONED REPO"
+#       #     cd testing-artifactory
+#       #     ls -la
+
 #       - uses: actions/checkout@v2
-#       - name: Install mustache (to update the date in build.sh)
-#         run:  apk add ruby && gem install mustache
-#       - name: creates the wanted files in output_temp/ - example script
-#         run:  sh ./build.sh
-#       - name: filters output_temp/ to output/ using rsync (to exclude master.epub in this example)
-#         run:  apk add rsync && rsync -arv --exclude="/master.epub" output_temp/ output/
+#       - name: creates output
+#         run:  mkdir output; date > output/date.txt
+#         # use GuillaumeFalourd/clone-github-repo-action@main to clone the repo and copy the cloned repository content to the output directory
+#       - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
+#         uses: GuillaumeFalourd/clone-github-repo-action@main
+#         with:
+#           depth: 1
+#           branch: 'master'
+#           owner: 'MuhammadMesum514'
+#           repository: 'testing-artifactory'
+#           access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#           # repository: 'poc-github-actions'
+#       - name: Access cloned repository content
+#         run: |
+#           echo "ROOT"
+#           ls -la testing-artifactory
+#           pwd
+#           mv testing-artifactory/* output/
+#           # echo "CLONED REPO"
+#           # cp -r * output/
+#           # cd testing-artifactory
+#           ls -la
+#         # copy repository content to output directory
+#       # - name: Copy files from source to target
+#       #   run: |
+#       #     mkdir -p output  # Create dest directory if it doesn't exist
+#       #     ls -la 
+#       #     cp -r * output/
+#       #     ls -la output/
+
+      
+
+
+
+#       # - name: Pushes to another repository
+#         # uses: cpina/github-action-push-to-another-repository@master
+#         # env:
+#           # API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
+
 #       - name: Pushes to another repository
 #         id: push_directory
 #         uses: cpina/github-action-push-to-another-repository@master
 #         env:
 #           API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
 #         with:
-#           source-directory: output/
+#           source-directory: output
 #           destination-github-username: 'MuhammadMesum514'
 #           destination-repository-name: 'enterprise-target'
 #           user-email: mesumraza09@gmail.com
@@ -35,106 +123,18 @@
 #       - name: Test get variable exported by push-to-another-repository
 #         run: echo $DESTINATION_CLONED_DIRECTORY
 
+#       # - name: Configure Git
+#       #   run: |
+#       #    git config --global user.email "you@example.com"
+#       #    git config --global user.name "Your Name"
 
-# name: Clone and Push Workflow
-
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
-
-jobs:
-    
-  job-public-repo-ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      
-      # - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
-      #   uses: GuillaumeFalourd/clone-github-repo-action@main
-      #   with:
-      #     depth: 1
-      #     branch: 'master'
-      #     owner: 'MuhammadMesum514'
-      #     repository: 'testing-artifactory'
-      #     access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-      #     # repository: 'poc-github-actions'
-      
-      # - name: Access cloned repository content
-      #   run: |
-      #     echo "ROOT"
-      #     ls -la
-      #     echo "CLONED REPO"
-      #     cd testing-artifactory
-      #     ls -la
-
-      - uses: actions/checkout@v2
-      - name: creates output
-        run:  mkdir output; date > output/date.txt
-        # use GuillaumeFalourd/clone-github-repo-action@main to clone the repo and copy the cloned repository content to the output directory
-      - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
-        uses: GuillaumeFalourd/clone-github-repo-action@main
-        with:
-          depth: 1
-          branch: 'master'
-          owner: 'MuhammadMesum514'
-          repository: 'testing-artifactory'
-          access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          # repository: 'poc-github-actions'
-      - name: Access cloned repository content
-        run: |
-          echo "ROOT"
-          ls -la testing-artifactory
-          pwd
-          mv testing-artifactory/* output/
-          # echo "CLONED REPO"
-          # cp -r * output/
-          # cd testing-artifactory
-          ls -la
-        # copy repository content to output directory
-      # - name: Copy files from source to target
-      #   run: |
-      #     mkdir -p output  # Create dest directory if it doesn't exist
-      #     ls -la 
-      #     cp -r * output/
-      #     ls -la output/
-
-      
-
-
-
-      # - name: Pushes to another repository
-        # uses: cpina/github-action-push-to-another-repository@master
-        # env:
-          # API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
-
-      - name: Pushes to another repository
-        id: push_directory
-        uses: cpina/github-action-push-to-another-repository@master
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
-        with:
-          source-directory: output
-          destination-github-username: 'MuhammadMesum514'
-          destination-repository-name: 'enterprise-target'
-          user-email: mesumraza09@gmail.com
-          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-          target-branch: master
-      - name: Test get variable exported by push-to-another-repository
-        run: echo $DESTINATION_CLONED_DIRECTORY
-
-      # - name: Configure Git
-      #   run: |
-      #    git config --global user.email "you@example.com"
-      #    git config --global user.name "Your Name"
-
-      # - name: Push to MuhammadMesum514/test-enterprise repository
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     directory: testing-artifactory
-      #     branch: master  # Specify the branch you want to push to
-      #     force: true
-      #     github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-      #     repository: MuhammadMesum514/test-enterprise
+#       # - name: Push to MuhammadMesum514/test-enterprise repository
+#       #   uses: ad-m/github-push-action@master
+#       #   with:
+#       #     directory: testing-artifactory
+#       #     branch: master  # Specify the branch you want to push to
+#       #     force: true
+#       #     github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#       #     repository: MuhammadMesum514/test-enterprise
 
 
