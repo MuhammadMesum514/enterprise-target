@@ -22,7 +22,7 @@ jobs:
         # run:  apk add rsync && rsync -arv --exclude="/master.epub" output_temp/ output/
       - name: Pushes to another repository
         id: push_directory
-        uses: MuhammadMesum514/testing-artifactory@master
+        uses: cpina/github-action-push-to-another-repository@master
         env:
           API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
