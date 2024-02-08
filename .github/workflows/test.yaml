@@ -1,33 +1,36 @@
-name: Push to Target Repo
+# This is a basic workflow to help you get started with Actions
+
+name: CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master, filter-files ]
+  pull_request:
+    branches: [ master, filter-files ]
 
 jobs:
-  push_to_target:
+  build:
     runs-on: ubuntu-latest
-
+    container: pandoc/latex
     steps:
-      - name: Checkout source repo
-        uses: actions/checkout@v2
-
-      - name: Set up Git
-        run: |
-          echo ${{ secrets.REPO_ACCESS_TOKEN }}  
-
-
-      - name: Push to target repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - name: Install mustache (to update the date in build.sh)
+        run:  apk add ruby && gem install mustache
+      - name: creates the wanted files in output_temp/ - example script
+        run:  sh ./build.sh
+      # - name: filters output_temp/ to output/ using rsync (to exclude master.epub in this example)
+        # run:  apk add rsync && rsync -arv --exclude="/master.epub" output_temp/ output/
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@master
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
-          repository: MuhammadMesum514/enterprise-target.git
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          ref: 'master'
-      - run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "mesumraza09@gmail.com"
-          git checkout -b repo-sync
-          git add .
-          git commit -m "Sync changes from source repo"
-          git push origin repo-sync
+          source-directory: output/
+          destination-github-username: 'MuhammadMesum514'
+          destination-repository-name: 'enterprise-target'
+          user-email: mesumraza09@gmail.com
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: master
+      - name: Test get variable exported by push-to-another-repository
+        run: echo $DESTINATION_CLONED_DIRECTORY
