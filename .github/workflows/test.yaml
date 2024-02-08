@@ -38,81 +38,71 @@
 
 # name: Clone and Push Workflow
 
-# on:
-#   push:
-#     branches:
-#       - master
-#   workflow_dispatch:
-
-# jobs:
-    
-#   job-public-repo-ubuntu:
-#     runs-on: ubuntu-latest
-#     steps:
-      
-#       - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
-#         uses: GuillaumeFalourd/clone-github-repo-action@main
-#         with:
-#           depth: 1
-#           branch: 'master'
-#           owner: 'MuhammadMesum514'
-#           repository: 'testing-artifactory'
-#           access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
-#           # repository: 'poc-github-actions'
-      
-#       - name: Access cloned repository content
-#         run: |
-#           echo "ROOT"
-#           ls -la
-#           echo "CLONED REPO"
-#           cd testing-artifactory
-#           ls -la
-
-#       - name: Configure Git
-#         run: |
-#          git config --global user.email "you@example.com"
-#          git config --global user.name "Your Name"
-
-#       - name: Push to MuhammadMesum514/test-enterprise repository
-#         uses: ad-m/github-push-action@master
-#         with:
-#           directory: testing-artifactory
-#           branch: master  # Specify the branch you want to push to
-#           force: true
-#           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-#           repository: MuhammadMesum514/test-enterprise
-
-
-
-name: Test
 on:
-  delete:
-  pull_request:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
-  check_preconditions:
+    
+  job-public-repo-ubuntu:
     runs-on: ubuntu-latest
-    outputs:
-      results: ${{ join(steps.*.outcome) }}
     steps:
-      - id: secrets
-        continue-on-error: true
+      
+      # - name: Clone MuhammadMesum514/testing-artifactory PRIVATE repository
+      #   uses: GuillaumeFalourd/clone-github-repo-action@main
+      #   with:
+      #     depth: 1
+      #     branch: 'master'
+      #     owner: 'MuhammadMesum514'
+      #     repository: 'testing-artifactory'
+      #     access-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #     # repository: 'poc-github-actions'
+      
+      # - name: Access cloned repository content
+      #   run: |
+      #     echo "ROOT"
+      #     ls -la
+      #     echo "CLONED REPO"
+      #     cd testing-artifactory
+      #     ls -la
+
+      - uses: actions/checkout@v2
+      - name: creates output
+        run:  mkdir output; date > output/date.txt
+      - name: Pushes to another repository
+        uses: cpina/github-action-push-to-another-repository@debug-78
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.REPO_SSH_PRIVATE_KEY }}
-          TARGET_REPO_URL: git@github.com:MuhammadMesum514/test-enterprise.git
-        run: '[ -n "$SSH_PRIVATE_KEY" ] && [ -n "$TARGET_REPO_URL" ]'
-  mirroring:
-    needs: check_preconditions
-    if: "!contains(needs.check_preconditions.outputs.results, 'failure')"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+          SSH_DEPLOY_KEY: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+      - name: Pushes to another repository
+        id: push_directory
+        uses: cpina/github-action-push-to-another-repository@master
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.REPO_ACCESS_TOKEN }}
         with:
-          fetch-depth: 0
-      - uses: pixta-dev/repository-mirroring-action@v1
-        with:
-          ssh_private_key: ${{ secrets.REPO_SSH_PRIVATE_KEY }}
-          target_repo_url: git@github.com:MuhammadMesum514/test-enterprise.git
+          source-directory: testing-artifactory
+          destination-github-username: 'MuhammadMesum514'
+          destination-repository-name: 'enterprise-target'
+          user-email: mesumraza09@gmail.com
+          commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+          target-branch: master
+      - name: Test get variable exported by push-to-another-repository
+        run: echo $DESTINATION_CLONED_DIRECTORY
+
+      # - name: Configure Git
+      #   run: |
+      #    git config --global user.email "you@example.com"
+      #    git config --global user.name "Your Name"
+
+      # - name: Push to MuhammadMesum514/test-enterprise repository
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     directory: testing-artifactory
+      #     branch: master  # Specify the branch you want to push to
+      #     force: true
+      #     github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #     repository: MuhammadMesum514/test-enterprise
+
+
