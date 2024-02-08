@@ -1,54 +1,100 @@
-name: Sync Repositories
+# name: Sync Repositories
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-jobs:
-  sync:
-    runs-on: ubuntu-latest
+# jobs:
+#   sync:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Show Permissions of Repository
-        run: |
-           curl -H "Authorization: Bearer ${{ secrets.REPO_ACCESS_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/MuhammadMesum514/testing-artifactory
+#     steps:
+#       - name: Show Permissions of Repository
+#         run: |
+#            curl -H "Authorization: Bearer ${{ secrets.REPO_ACCESS_TOKEN }}" \
+#                -H "Accept: application/vnd.github.v3+json" \
+#                https://api.github.com/repos/MuhammadMesum514/testing-artifactory
 
-      - name: Checkout source repository
-        uses: actions/checkout@v2
-        with:
-          repository: MuhammadMesum514/testing-artifactory
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          ref: master
-          persist-credentials: false  # No need to persist credentials for the source repository
+#       - name: Checkout source repository
+#         uses: actions/checkout@v2
+#         with:
+#           repository: MuhammadMesum514/testing-artifactory
+#           token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#           ref: master
+#           persist-credentials: false  # No need to persist credentials for the source repository
 
-      - name: Display Repository Contents
-        run: |
-          ls -la
-          # cat hello.html
+#       - name: Display Repository Contents
+#         run: |
+#           ls -la
+#           # cat hello.html
 
-      - name: Checkout target repository
-        uses: actions/checkout@v2
-        with:
-          path: "dest"
-          repository: MuhammadMesum514/enterprise-target
-          ref: master
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          persist-credentials: false  # No need to persist credentials for the target repository
+#       - name: Checkout target repository
+#         uses: actions/checkout@v2
+#         with:
+#           path: "dest"
+#           repository: MuhammadMesum514/enterprise-target
+#           ref: master
+#           token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#           persist-credentials: false  # No need to persist credentials for the target repository
 
-      # copy common files to the target repo
-      - name: Copy common files
-        run: |
-          cp -r * dest/
-          ls -la dest/
+#       # - name: Copy common files
+#       #   run: |
+#       #     cp -r * dest/
+#       #     ls -la dest/
 
-      - name: Sync repositories
-        run: |
-          cd dest
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add .
-          git commit -m "Sync changes from source repository"
-          git push origin master
+#       - name: Copy files from source to target
+#         run: |
+#           mkdir -p dest  # Create dest directory if it doesn't exist
+#           ls -la 
+          
+
+#       - name: Sync repositories
+#         run: |
+#           cd dest
+#           git config user.name "GitHub Actions"
+#           git config user.email "actions@github.com"
+#           git add .
+#           git commit -m "Sync changes from source repository"
+#           git push origin master
+
+
+
+# name: Repo Sync
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   repo-sync:
+#     name: Repo Sync
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Git
+#         run: git push origin master:repo-sync
+#       - run: |
+#           git checkout -b repo-sync
+#           git remote -v
+#           git branch -a
+#       - run: git push origin 
+#       - uses: repo-sync/github-sync@v2
+#         name: Sync repo to branch
+#         with:
+#           source_repo: https://github.com/MuhammadMesum514/testing-artifactory.git
+#           source_branch: master
+#           destination_branch: repo-sync
+#           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+#       - uses: repo-sync/pull-request@v2
+#         name: Create pull request
+#         with:
+#           source_branch: repo-sync
+#           destination_branch: main
+#           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+
+
+
