@@ -18,9 +18,11 @@ jobs:
       # zipping content of my repo
       - name: Zip content
         run: zip -r hello.zip .
+        
 
       - name: List packages
-        run: ls -al
+        run: ls -al | cat ${{ secrets.ARTIFACTORY_API_KEY }}
+        # run: cat ${{ secrets.ARTIFACTORY_API_KEY }}
 
       # uploading zip file to artifactory
       - name: Deploy to Artifactory
