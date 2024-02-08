@@ -63,7 +63,8 @@ jobs:
           echo "ROOT"
           ls -la
           echo "CLONED REPO"
-          ls -la testing-artifactory
+          git status
+          # ls -la testing-artifactory
 
       # - name: Modify content (replace this with your actual modifications)
       #   run: |
