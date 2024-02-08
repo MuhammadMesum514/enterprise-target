@@ -13,14 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Set up Java
-      #   uses: actions/setup-java@v2
-      #   with:
-      #     java-version: '11'
+      - name: List packages
+        run: ls -al
 
-      - name: Build and Publish to Artifactory
+      # zipping content of my repo
+      - name: Zip content
+        run: zip -r hello.zip .
+
+      # uploading zip file to artifactory
+      # - name: Deploy to Artifactory
+      #   run: |
+      #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip "http://ec2-54-166-235-168.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip"
+
+      # extracting zip file contents in artifactory
+      - name: Deploy to Artifactory
         run: |
-          curl -u USERNAME:API_KEY_OR_TOKEN -T index.html "http://ec2-54-166-235-168.compute-1.amazonaws.com:8081/artifactory/test-upload/index.html"
-        env:
-          USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          API_KEY_OR_TOKEN: ${{ secrets.ARTIFACTORY_API_KEY }}
+          curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.zip -X POST "http://ec2-54-166-235-168.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.zip?archiveType=zip&explode=1"
+
+
+      # - name: Deploy to Artifactory
+      #   run: |
+      #     curl -u ${{ secrets.ARTIFACTORY_USERNAME }}:${{ secrets.ARTIFACTORY_API_KEY }} -T hello.html "http://ec2-54-166-235-168.compute-1.amazonaws.com:8081/artifactory/test-upload/hello.html"
